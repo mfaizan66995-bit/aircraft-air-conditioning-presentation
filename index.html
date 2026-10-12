@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aircraft Air Conditioning System</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a2d;
+      --panel-2: #1a2742;
+      --accent: #57c7ff;
+      --accent-2: #7ef0d6;
+      --text: #eaf2ff;
+      --muted: #a9b9d1;
+      --line: rgba(255,255,255,0.12);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    body { overflow: hidden; }
+    .deck {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: radial-gradient(circle at top, #152642, var(--bg) 55%);
+    }
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 64px 80px 56px;
+      opacity: 0;
+      transform: translateX(30px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 18px 18px auto 18px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius: 999px;
+      opacity: 0.8;
+    }
+    h1, h2, h3, p, li { position: relative; z-index: 1; }
+    h1 {
+      font-size: clamp(2.2rem, 3vw, 3.4rem);
+      line-height: 1.12;
+      margin: 18px 0 20px;
+      letter-spacing: 0.04em;
+    }
+    h2 {
+      font-size: clamp(1.5rem, 2.2vw, 2.4rem);
+      margin: 10px 0 20px;
+      color: var(--accent-2);
+    }
+    h3 {
+      font-size: 1.15rem;
+      margin: 0 0 8px;
+      color: var(--accent);
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    p, li {
+      font-size: clamp(1rem, 1.2vw, 1.35rem);
+      line-height: 1.7;
+      color: var(--text);
+    }
+    ul {
+      margin: 18px 0 0 24px;
+      padding-left: 18px;
+    }
+    li + li { margin-top: 8px; }
+    .subtitle {
+      color: var(--muted);
+      font-size: clamp(1.1rem, 1.5vw, 1.35rem);
+      margin-top: 8px;
+      letter-spacing: 0.04em;
+    }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 20px; }
+    .box {
+      background: rgba(18,26,45,0.72);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+    }
+    .box h3 { margin-bottom: 10px; }
+    .code {
+      font-family: Consolas, monospace;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 14px 16px;
+      white-space: pre-wrap;
+      line-height: 1.55;
+      color: var(--accent-2);
+      font-size: 0.95rem;
+    }
+    .footer {
+      position: absolute;
+      left: 80px;
+      right: 80px;
+      bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 0.88rem;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+    .nav {
+      position: absolute;
+      right: 28px;
+      bottom: 20px;
+      display: flex;
+      gap: 12px;
+      z-index: 2;
+    }
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    button:hover { background: rgba(255,255,255,0.08); }
+    .page-indicator {
+      position: absolute;
+      left: 28px;
+      bottom: 20px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      z-index: 2;
+    }
+    .highlight { color: var(--accent-2); font-weight: 700; }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      align-items: center;
+    }
+    .pill {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(126, 240, 214, 0.4);
+      color: var(--accent-2);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    @media (max-width: 900px) {
+      .slide { padding: 52px 30px 54px 30px; }
+      .grid, .two-col { grid-template-columns: 1fr; }
+      .footer { left: 30px; right: 30px; }
+      .nav { right: 20px; }
+      .page-indicator { left: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck">
+    <section class="slide active">
+      <div class="pill">Aviation Systems</div>
+      <h1>Aircraft Air Conditioning System</h1>
+      <div class="subtitle">Environmental Control System (ECS)</div>
+      <p style="margin-top: 30px; max-width: 900px;">Basic principles, system components, operating cycle, pressurization relationship, and safety aspects</p>
+      <div class="grid" style="margin-top: 40px;">
+        <div class="box">
+          <h3>Core Purpose</h3>
+          <ul>
+            <li>Provide cabin cooling and ventilation</li>
+            <li>Maintain safe cabin pressure</li>
+            <li>Support crew and passenger comfort</li>
+            <li>Assist avionics thermal management</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Key Sources</h3>
+          <ul>
+            <li>Engine bleed air</li>
+            <li>APU bleed air</li>
+            <li>Ground air-conditioning</li>
+            <li>Ram-air cooling support</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer"><span>Aircraft Environmental Control</span><span>Slide 1 / 12</span></div>
+    </section>
+
+    <section class="slide">
+      <h2>Why It Is Necessary</h2>
+      <div class="two-col">
+        <div>
+          <ul>
+            <li>At cruise altitude, outside air is <span class="highlight">very cold</span> and <span class="highlight">low pressure</span>.</li>
+            <li>Passengers and crew need a controlled cabin environment for survival and comfort.</li>
+            <li>Cabin pressurization reduces physiological stress from altitude exposure.</li>
+            <li>Avionics and mission equipment require temperature control and stable conditions.</li>
+            <li>Air quality, ventilation, and moisture removal must be maintained.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>System Goal</h3>
+          <div class="code">Cabin pressure + cabin temperature + ventilation + air quality</div>
+        </div>
+      </div>
+      <div class="footer"><span>Safety and physiological protection</span><span>Slide 2 / 12</span></div>
+    </section>
+
+    <section class="slide">
+      <h2>Air Sources and Input</h2>
+      <div class="grid">
+        <div class="box">
+          <h3>Primary Sources</h3>
+          <ul>
+            <li>Engine bleed air</li>
+            <li>APU bleed air</li>
+            <li>Ground conditioning unit</li>
+            <li>Ram air for auxiliary cooling</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Engineering Note</h3>
+          <p>Engine bleed air is extracted from compressor sections. It is hot and under high pressure, so it must be conditioned before use in the cabin.</p>
+        </div>
+      </div>
+      <div class="code" style="margin-top: 20px;">
+Engine/APU bleed air
+      ↓
+   Filter + shutoff valve
+      ↓
+   ECS conditioning pack
+      ↓
+   Cabin distribution system
+      </div>
+      <div class="footer"><span>Air supply path</span><span>Slide 3 / 12</span></div>
+    </section>
+
+    <section class="slide">
+      <h2>Basic Air Conditioning Flow</h2>
+      <div class="code">
+Bleed Air → Filter → Precooler → Compressor → Heat Exchanger → Turbine → Cold Air
+                          ↓
+                 Water Separator / Control Valve
+                          ↓
+                    Cabin Zones / Flight Deck
+      </div>
+      <ul style="margin-top: 20px;">
+        <li>Air is conditioned before it reaches passengers and crew.</li>
+        <li>Some aircraft mix fresh conditioned air with recirculated cabin air.</li>
+        <li>The objective is to maintain a steady, comfortable, and safe cabin environment.</li>
+      </ul>
+      <div class="footer"><span>Conditioning process</span><span>Slide 4 / 12</span></div>
+    </section>
+
+    <section class="slide">
+      <h2>Air Cycle Refrigeration</h2>
+      <div class="two-col">
+        <div>
+          <ul>
+            <li>Most aircraft EC systems use the <span class="highlight">air cycle machine</span>.</li>
+            <li>Compression raises temperature and pressure.</li>
+            <li>Heat is rejected through a heat exchanger.</li>
+            <li>Expansion through a turbine causes a large temperature drop.</li>
+            <li>The outlet air becomes cold enough to cool the cabin.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Thermodynamic Sequence</h3>
+          <div class="code">Compression
+   ↓
+Heat rejection
+   ↓
+Turbine expansion
+   ↓
+Cold conditioned air</div>
+        </div>
+      </div>
+      <div class="footer"><span>Cooling technology</span><span>Slide 5 / 12</span></div>
+    </section>
+
+    <section class="slide">
+      <h2>Main Components</h2>
+      <div class="grid">
+        <div class="box">
+          <h3>Primary Components</h3>
+          <ul>
+            <li>Bleed air shutoff valve</li>
+            <li>Filter</li>
+            <li>Precooler / heat exchanger</li>
+            <li>Compressor</li>
+            <li>Turbine</li>
+            <li>Water separator</li>
+            <li>Mixing chamber / trim air valve</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Distribution and Control</h3>
+          <ul>
+            <li>Ducting</li>
+            <li>Zone temperature sensors</li>
+            <li>Pressure controller</li>
+            <li>Outflow valve</li>
+            <li>Recirculation fans</li>
+            <li>Safety valves</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer"><span>System architecture</span><span>Slide 6 / 12</span></div>
+    </section>
+
+    <section class="slide">
+      <h2>Pressurization Relationship</h2>
+      <div class="two-col">
+        <div>
+          <ul>
+            <li>ECS is closely linked to cabin pressurization.</li>
+            <li>The cabin is maintained at a pressure altitude lower than the ambient altitude.</li>
+            <li>Typical cabin altitude during flight may be around <span class="highlight">6,000–8,000 ft</span>.</li>
+            <li>Outflow valves regulate cabin pressure by controlling discharged air.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Outflow Valve Role</h3>
+          <div class="code">Open valve = lower cabin pressure
+Closed valve = higher cabin pressure</div>
+        </div>
+      </div>
+      <div class="footer"><span>Cabin pressure control</span><span>Slide 7 / 12</span></div>
+    </section>
+
+    <section class="slide">
+      <h2>Temperature Control</h2>
+      <div class="grid">
+        <div class="box">
+          <h3>Control Methods</h3>
+          <ul>
+            <li>Pack flow modulation</li>
+            <li>Bypass valves</li>
+            <li>Trim air valves</li>
+            <li>Zone temperature sensors</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Typical Zones</h3>
+          <ul>
+            <li>Cockpit</li>
+            <li>Forward cabin</li>
+            <li>Mid cabin</li>
+            <li>Aft cabin</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top: 20px;">The pack provides the conditioned baseline air, while trim or mixing valves finish the temperature control for each zone.</p>
+      <div class="footer"><span>Cabin temperature regulation</span><span>Slide 8 / 12</span></div>
+    </section>
+
+    <section class="slide">
+      <h2>Recirculation and Filtration</h2>
+      <div class="two-col">
+        <div>
+          <ul>
+            <li>Modern aircraft often use recirculated cabin air.</li>
+            <li>Recirculation reduces bleed air demand and improves efficiency.</li>
+            <li>Filters remove dust, pollen, and some contaminants.</li>
+            <li>Fresh conditioned air is still required to meet ventilation and air-quality standards.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Flow</h3>
+          <div class="code">Fresh air → cabin → fan → filter → mixed return air</div>
+        </div>
+      </div>
+      <div class="footer"><span>Air quality management</span><span>Slide 9 / 12</span></div>
+    </section>
+
+    <section class="slide">
+      <h2>Safety and Protection</h2>
+      <ul>
+        <li>Bleed air leak detection to prevent hot-air leaks</li>
+        <li>Duct overheat detection and isolation</li>
+        <li>Pack overpressure prevention</li>
+        <li>Fire detection and shutdown logic</li>
+        <li>Pressure monitoring and relief protection</li>
+      </ul>
+      <div class="box" style="margin-top: 18px; max-width: 680px;">
+        <h3>Why Safety Is Critical</h3>
+        <p>Bleed air is hot and can create severe risk if ducting fails. ECS protection systems isolate failures before they create cabin fire or pressure issues.</p>
+      </div>
+      <div class="footer"><span>Fault protection and isolation</span><span>Slide 10 / 12</span></div>
+    </section>
+
+    <section class="slide">
+      <h2>Maintenance and Operation</h2>
+      <div class="grid">
+        <div class="box">
+          <h3>Typical Checks</h3>
+          <ul>
+            <li>Filter condition</li>
+            <li>Valve operation</li>
+            <li>Heat exchanger integrity</li>
+            <li>Moisture drain functionality</li>
+            <li>Cabin pressure leak checks</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Operational Effects</h3>
+          <ul>
+            <li>Cabin overheating</li>
+            <li>Undercooling</li>
+            <li>Pressure loss</li>
+            <li>Reduced dispatch reliability</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer"><span>Maintenance engineering</span><span>Slide 11 / 12</span></div>
+    </section>
+
+    <section class="slide">
+      <h2>Conclusion</h2>
+      <p>The aircraft air conditioning system is a critical <span class="highlight">life-support and operational system</span>. It cools the cabin, regulates pressure, controls ventilation, manages air quality, and protects the aircraft environment at high altitude.</p>
+      <div class="box" style="margin-top: 26px; max-width: 860px;">
+        <h3>Core Takeaway</h3>
+        <p>It is not just a comfort system — it is an essential aircraft environmental control system that supports passenger safety, crew health, avionics operation, and reliable aircraft performance.</p>
+      </div>
+      <div class="footer"><span>Final summary</span><span>Slide 12 / 12</span></div>
+    </section>
+
+    <div class="page-indicator" id="pageIndicator">1 / 12</div>
+    <div class="nav">
+      <button id="prevBtn">← Prev</button>
+      <button id="nextBtn">Next →</button>
+    </div>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    let current = 0;
+    const pageIndicator = document.getElementById('pageIndicator');
+    function updateSlides() {
+      slides.forEach((slide, index) => slide.classList.toggle('active', index === current));
+      pageIndicator.textContent = `${current + 1} / ${slides.length}`;
+    }
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      current = (current + 1) % slides.length;
+      updateSlides();
+    });
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      current = (current - 1 + slides.length) % slides.length;
+      updateSlides();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
+        current = (current + 1) % slides.length;
+        updateSlides();
+      }
+      if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+        current = (current - 1 + slides.length) % slides.length;
+        updateSlides();
+      }
+    });
+  </script>
+</body>
+</html>
